@@ -12,13 +12,4 @@ public class TodoApiApplication {
     public static void main(String[] args) {
         SpringApplication.run(TodoApiApplication.class, args);
     }
-//    @Bean
-//    public WebMvcConfigurer corsConfigurer() {
-//        return new WebMvcConfigurer() {
-//            @Override
-//            public void addCorsMappings(CorsRegistry registry) {
-//                registry.addMapping("/api/auth/signin").allowedOrigins("http://128.199.158.139:8080");
-//            }
-//        };
-//    }
 }
