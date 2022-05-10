@@ -28,4 +28,7 @@ public class NoteEntity {
     @UpdateTimestamp
     @Column(name = "updated_time")
     private Timestamp updated_time;
+    @ManyToOne(fetch = FetchType.EAGER,targetEntity = UserEntity.class)
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
 }
