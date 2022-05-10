@@ -7,9 +7,9 @@ import com.example.todoapi.entities.UserEntity;
 import com.example.todoapi.jwt.JwtUtils;
 import com.example.todoapi.payload.request.TokenRefreshRequest;
 import com.example.todoapi.payload.response.TokenRefreshResponse;
-import com.example.todoapi.repositories.UserRepository;
 import com.example.todoapi.services.RefreshTokenService;
 import com.example.todoapi.services.UserDetailsImpl;
+import com.example.todoapi.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -34,7 +34,7 @@ public class HomeController {
     @Autowired
     PasswordEncoder passwordEncoder;
     @Autowired
-    UserRepository userRepository;
+    UserService userService;
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
@@ -72,7 +72,7 @@ public class HomeController {
         UserEntity user = new UserEntity();
         user.setUsername("user");
         user.setPassword(passwordEncoder.encode("123"));
-        userRepository.save(user);
+        userService.addNewUser(user);
         return "";
     }
 }
