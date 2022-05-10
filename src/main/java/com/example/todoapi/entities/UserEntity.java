@@ -29,6 +29,9 @@ public class UserEntity {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<RoleEntity> roles = new HashSet<>();
 
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
+    private Set<NoteEntity> noteEntities;
+
     public UserEntity(String username, String email, String password) {
         this.username = username;
         this.email = email;

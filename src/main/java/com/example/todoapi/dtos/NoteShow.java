@@ -14,5 +14,5 @@ public class NoteShow {
     private Long id;
     private String note_des;
     private Timestamp remind;
-
+    private Long uid;
 }
