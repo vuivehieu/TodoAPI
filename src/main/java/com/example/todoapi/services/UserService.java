@@ -50,9 +50,9 @@ public class UserService {
     public void saveUser(UserDTO userDTO){
         UserEntity a = userRepository.findById(userDTO.getId()).get();
         Set<NoteEntity> noteEntities = new HashSet<>();
-        for (NoteShow n: userDTO.getNoteShowSet()
+        for (NoteEntity n: noteRepository.findAllByUser(userRepository.findById(userDTO.getId()).get())
              ) {
-            noteEntities.add(noteRepository.findById(n.getId()).get());
+            noteEntities.add(n);
         }
         a.setNoteEntities(noteEntities);
         userRepository.save(a);

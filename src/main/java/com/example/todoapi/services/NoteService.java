@@ -5,15 +5,15 @@ import com.example.todoapi.dtos.NoteShow;
 import java.util.List;
 
 public interface NoteService {
-    List<NoteShow> getAllNote();
+    List<NoteShow> getAllNote(Long uid);
 
     NoteShow getNoteByID(Long id);
 
     void insertNote(NoteShow noteShow);
 
-    void updateNote(NoteShow noteShow);
+    void updateNote(NoteShow noteShow, Long nid);
 
     void deleteNote(Long id);
 
-    List<NoteShow> getNoteByName(String noteDes);
+    List<NoteShow> getNoteByDes(String noteDes, Long uid);
 }

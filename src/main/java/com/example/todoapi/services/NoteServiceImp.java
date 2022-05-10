@@ -17,8 +17,8 @@ public class NoteServiceImp implements NoteService{
     @Autowired
     UserRepository userRepository;
     @Override
-    public List<NoteShow> getAllNote() {
-        return noteRepository.findAll().stream().map(noteEntity -> NoteShow.builder().uid(noteEntity.getUser().getId()).id(noteEntity.getId()).note_des(noteEntity.getNote_description()).remind(noteEntity.getRemind_time()).build()).collect(Collectors.toList());
+    public List<NoteShow> getAllNote(Long uid) {
+        return noteRepository.findAll().stream().map(noteEntity -> NoteShow.builder().uid(uid).id(noteEntity.getId()).note_des(noteEntity.getNote_description()).remind(noteEntity.getRemind_time()).build()).collect(Collectors.toList());
     }
 
     @Override
@@ -33,8 +33,8 @@ public class NoteServiceImp implements NoteService{
     }
 
     @Override
-    public void updateNote(NoteShow noteShow) {
-        NoteEntity note = noteRepository.findById(noteShow.getId()).get();
+    public void updateNote(NoteShow noteShow, Long nid) {
+        NoteEntity note = noteRepository.findById(nid).get();
         note.setNote_description(noteShow.getNote_des());
         note.setRemind_time(noteShow.getRemind());
         note.setUser(userRepository.findById(noteShow.getUid()).get());
@@ -47,7 +47,7 @@ public class NoteServiceImp implements NoteService{
     }
 
     @Override
-    public List<NoteShow> getNoteByName(String noteDes) {
-        return noteRepository.findAllByNote_description(noteDes).stream().map(noteEntity -> NoteShow.builder().id(noteEntity.getId()).note_des(noteEntity.getNote_description()).remind(noteEntity.getRemind_time()).build()).collect(Collectors.toList());
+    public List<NoteShow> getNoteByDes(String noteDes, Long uid) {
+        return noteRepository.findAllByNote_description(noteDes).stream().map(noteEntity -> NoteShow.builder().id(noteEntity.getId()).note_des(noteEntity.getNote_description()).remind(noteEntity.getRemind_time()).build()).filter(p->p.getUid()==uid).collect(Collectors.toList());
     }
 }
