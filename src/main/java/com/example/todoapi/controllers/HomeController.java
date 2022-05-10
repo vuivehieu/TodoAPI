@@ -36,7 +36,7 @@ public class HomeController {
     @Autowired
     UserService userService;
 
-    @CrossOrigin(origins = "http://128.199.158.139:8080")
+//    @CrossOrigin(origins = "http://128.199.158.139:8080")
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
         Authentication authentication = authenticationManager
@@ -54,7 +54,7 @@ public class HomeController {
         return ResponseEntity.ok(new JwtResponse(jwt, refreshToken.getToken(), userDetails.getId(),
                 userDetails.getUsername(), userDetails.getEmail(), roles));
     }
-    @CrossOrigin(origins = "http://128.199.158.139:8080")
+//    @CrossOrigin(origins = "http://128.199.158.139:8080")
     @PostMapping("/refreshtoken")
     public ResponseEntity<?> refreshtoken(@RequestBody TokenRefreshRequest request) {
         String requestRefreshToken = request.getRefreshToken();
