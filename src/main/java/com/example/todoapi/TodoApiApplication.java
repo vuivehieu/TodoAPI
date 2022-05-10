@@ -17,7 +17,7 @@ public class TodoApiApplication {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/api/auth/signin").allowedOrigins("http://128.199.158.139s:8080");
+                registry.addMapping("/api/auth/signin").allowedOrigins("http://128.199.158.139:8080");
             }
         };
     }
