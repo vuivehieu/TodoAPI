@@ -3,10 +3,13 @@ package com.example.todoapi.controllers;
 import com.example.todoapi.dtos.JwtResponse;
 import com.example.todoapi.dtos.LoginRequest;
 import com.example.todoapi.entities.RefreshToken;
+import com.example.todoapi.entities.RoleEntity;
 import com.example.todoapi.entities.UserEntity;
 import com.example.todoapi.jwt.JwtUtils;
 import com.example.todoapi.payload.request.TokenRefreshRequest;
 import com.example.todoapi.payload.response.TokenRefreshResponse;
+import com.example.todoapi.repositories.RoleRepository;
+import com.example.todoapi.repositories.UserRepository;
 import com.example.todoapi.services.RefreshTokenService;
 import com.example.todoapi.services.UserDetailsImpl;
 import com.example.todoapi.services.UserService;
@@ -20,6 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
@@ -35,6 +39,10 @@ public class HomeController {
     PasswordEncoder passwordEncoder;
     @Autowired
     UserService userService;
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
+    RoleRepository roleRepository;
 
 //    @CrossOrigin(origins = "http://128.199.158.139:8080")
     @PostMapping("/signin")
@@ -46,10 +54,13 @@ public class HomeController {
 
         String jwt = jwtUtils.generateJwtToken(userDetails);
 
+        List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
+                .collect(Collectors.toList());
+
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
 
         return ResponseEntity.ok(new JwtResponse(jwt, refreshToken.getToken(), userDetails.getId(),
-                userDetails.getUsername(), userDetails.getEmail()));
+                userDetails.getUsername(), userDetails.getEmail(), roles));
     }
 //    @CrossOrigin(origins = "http://128.199.158.139:8080")
     @PostMapping("/refreshtoken")
@@ -67,10 +78,12 @@ public class HomeController {
 
     @GetMapping("/add")
     public String addUser(){
+        RoleEntity roleUser = roleRepository.findByName("ROLE_USER");
         UserEntity user = new UserEntity();
         user.setUsername("user");
         user.setPassword(passwordEncoder.encode("123"));
-        userService.addNewUser(user);
+        user.setRoles(Set.of(roleUser));
+        userRepository.save(user);
         return "";
     }
 }
