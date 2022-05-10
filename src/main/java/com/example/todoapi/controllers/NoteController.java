@@ -30,7 +30,7 @@ public class NoteController {
         noteService.updateNote(noteShow);
         return ResponseEntity.ok(noteShow);
     }
-    @PostMapping(produces = "application/json", value = "/{search}")
+    @GetMapping(produces = "application/json", value = "/find/{search}")
     public ResponseEntity<?> searchNote(@PathVariable("search") String search){
         return ResponseEntity.ok(noteService.getNoteByName(search));
     }
