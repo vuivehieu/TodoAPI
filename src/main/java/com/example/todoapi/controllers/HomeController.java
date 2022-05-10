@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@CrossOrigin(origins = "http://128.199.158.139:8080", maxAge = 3600)
+@CrossOrigin(origins = "http://159.223.45.168:8080", maxAge = 3600)
 @RestController
 @RequestMapping("/api/auth")
 public class HomeController {
