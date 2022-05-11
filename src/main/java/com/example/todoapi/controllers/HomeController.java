@@ -2,6 +2,7 @@ package com.example.todoapi.controllers;
 
 import com.example.todoapi.dtos.JwtResponse;
 import com.example.todoapi.dtos.LoginRequest;
+import com.example.todoapi.dtos.SignupRequest;
 import com.example.todoapi.entities.RefreshToken;
 import com.example.todoapi.entities.RoleEntity;
 import com.example.todoapi.entities.UserEntity;
@@ -83,5 +84,10 @@ public class HomeController {
         user.setRoles(Set.of(roleUser));
         userRepository.save(user);
         return "";
+    }
+
+    @PostMapping("/signup")
+    public ResponseEntity<?> addUser(@RequestBody SignupRequest signupRequest){
+        return ResponseEntity.ok(userService.addNewUser(signupRequest));
     }
 }

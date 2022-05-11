@@ -2,6 +2,7 @@ package com.example.todoapi.services;
 
 
 import com.example.todoapi.dtos.NoteShow;
+import com.example.todoapi.dtos.SignupRequest;
 import com.example.todoapi.dtos.UserDTO;
 import com.example.todoapi.entities.NoteEntity;
 import com.example.todoapi.entities.RoleEntity;
@@ -25,18 +26,19 @@ public class UserService {
     @Autowired
     NoteRepository noteRepository;
 
-    public boolean addNewUser(UserEntity userEntity){
+    public UserEntity addNewUser(SignupRequest signupRequest){
         RoleEntity roleUser = roleRepository.findByName("ROLE_USER");
-        UserEntity existUser = userRepository.findByUsername(userEntity.getUsername()).get();
+        UserEntity existUser = userRepository.findByUsername(signupRequest.getUsername()).get();
         if (existUser == null){
             UserEntity user = new UserEntity();
-            user.setUsername(userEntity.getUsername());
-            user.setPassword(userEntity.getPassword());
+            user.setUsername(signupRequest.getUsername());
+            user.setPassword(signupRequest.getPassword());
+            user.setEmail(signupRequest.getEmail());
             user.setRoles(Set.of(roleUser));
-            userRepository.save(userEntity);
-            return true;
+            userRepository.save(user);
+            return user;
         }
-        return false;
+        return existUser;
     }
     public Set<UserDTO> getAllUser(){
         return userRepository.findAll().stream().map(userEntity -> UserDTO.builder().id(userEntity.getId()).name(userEntity.getUsername()).noteShowSet(userEntity.getNoteEntities().stream().map(noteEntity -> NoteShow.builder().id(noteEntity.getId()).note_des(noteEntity.getNote_description()).remind(noteEntity.getRemind_time()).build()).collect(Collectors.toSet())).build()).collect(Collectors.toSet());
