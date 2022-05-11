@@ -2,6 +2,7 @@ package com.example.todoapi.dtos;
 
 import lombok.*;
 
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -12,5 +13,5 @@ import java.util.Set;
 public class UserDTO {
     private Long id;
     private String name;
-    private Set<NoteShow> noteShowSet;
+    private List<NoteShow> noteShowSet;
 }

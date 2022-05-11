@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -30,7 +31,7 @@ public class UserEntity {
     private Set<RoleEntity> roles = new HashSet<>();
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
-    private Set<NoteEntity> noteEntities;
+    private List<NoteEntity> noteEntities;
 
     public UserEntity(String username, String email, String password) {
         this.username = username;

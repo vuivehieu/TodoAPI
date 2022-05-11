@@ -45,24 +45,4 @@ public class UserService {
         }
         return existUser.orElseGet(existUserEmail::get);
     }
-    public Set<UserDTO> getAllUser(){
-        return userRepository.findAll().stream().map(userEntity -> UserDTO.builder().id(userEntity.getId()).name(userEntity.getUsername()).noteShowSet(userEntity.getNoteEntities().stream().map(noteEntity -> NoteShow.builder().id(noteEntity.getId()).note_des(noteEntity.getNote_description()).remind(noteEntity.getRemind_time()).build()).collect(Collectors.toSet())).build()).collect(Collectors.toSet());
-    }
-    public UserDTO getUserByID(Long id){
-        UserEntity a = userRepository.findById(id).get();
-        UserDTO user = UserDTO.builder().id(a.getId()).noteShowSet(a.getNoteEntities().stream().map(noteEntity -> NoteShow.builder().id(noteEntity.getId()).note_des(noteEntity.getNote_description()).remind(noteEntity.getRemind_time()).build()).collect(Collectors.toSet())).name(a.getUsername()).build();
-        return user;
-    }
-
-    public void saveUser(UserDTO userDTO){
-        UserEntity a = userRepository.findById(userDTO.getId()).get();
-        Set<NoteEntity> noteEntities = new HashSet<>();
-        for (NoteEntity n: noteRepository.findAllByUser(userRepository.findById(userDTO.getId()).get())
-             ) {
-            noteEntities.add(n);
-        }
-        a.setNoteEntities(noteEntities);
-        userRepository.save(a);
-    }
-
 }

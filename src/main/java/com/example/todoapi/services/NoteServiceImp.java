@@ -7,6 +7,7 @@ import com.example.todoapi.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,15 +17,16 @@ public class NoteServiceImp implements NoteService{
     NoteRepository noteRepository;
     @Autowired
     UserRepository userRepository;
+
     @Override
-    public List<NoteShow> getAllNote(Long uid) {
-        return noteRepository.findAll().stream().map(noteEntity -> NoteShow.builder().uid(uid).id(noteEntity.getId()).note_des(noteEntity.getNote_description()).remind(noteEntity.getRemind_time()).build()).collect(Collectors.toList());
+    public List<NoteShow> getAllNoteByUID(Long uid) {
+        return noteRepository.findAllByUserId(uid).stream().map(noteEntity -> new NoteShow().toDTO(noteEntity)).sorted(Comparator.comparing(NoteShow::getCreate)).collect(Collectors.toList());
     }
 
     @Override
     public NoteShow getNoteByID(Long id) {
         NoteEntity noteEntity = noteRepository.findById(id).get();
-        return NoteShow.builder().id(noteEntity.getId()).note_des(noteEntity.getNote_description()).remind(noteEntity.getRemind_time()).uid(noteEntity.getUser().getId()).build();
+        return new NoteShow().toDTO(noteEntity);
     }
 
     @Override
@@ -43,11 +45,11 @@ public class NoteServiceImp implements NoteService{
 
     @Override
     public void deleteNote(Long id) {
-        noteRepository.delete(noteRepository.findById(id).get());
+        noteRepository.deleteById(id);
     }
 
     @Override
-    public List<NoteShow> getNoteByDes(String noteDes, Long uid) {
-        return noteRepository.findAllByNote_description(noteDes).stream().map(noteEntity -> NoteShow.builder().id(noteEntity.getId()).note_des(noteEntity.getNote_description()).remind(noteEntity.getRemind_time()).build()).filter(p->p.getUid()==uid).collect(Collectors.toList());
+    public List<NoteShow> getNoteLike(String noteDes, Long uid) {
+        return noteRepository.findAllByNote_description(noteDes, uid).stream().map(noteEntity -> new NoteShow().toDTO(noteEntity)).collect(Collectors.toList());
     }
 }
