@@ -12,4 +12,17 @@ public class TodoApiApplication {
     public static void main(String[] args) {
         SpringApplication.run(TodoApiApplication.class, args);
     }
+
+    @Bean
+    public WebMvcConfigurer configurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")
+                        .allowedOrigins("http://10.0.0.151:3000", "http://159.223.45.168")
+                        .allowCredentials(true)
+                        .allowedMethods("GET", "POST", "DELETE", "PUT", "PATCH", "OPTIONS");
+            }
+        };
+    }
 }
