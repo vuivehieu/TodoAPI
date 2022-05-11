@@ -11,9 +11,11 @@ import com.example.todoapi.repositories.NoteRepository;
 import com.example.todoapi.repositories.RoleRepository;
 import com.example.todoapi.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -25,20 +27,23 @@ public class UserService {
     RoleRepository roleRepository;
     @Autowired
     NoteRepository noteRepository;
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     public UserEntity addNewUser(SignupRequest signupRequest){
         RoleEntity roleUser = roleRepository.findByName("ROLE_USER");
-        UserEntity existUser = userRepository.findByUsername(signupRequest.getUsername()).get();
-        if (existUser == null){
+        Optional<UserEntity> existUser = userRepository.findByUsername(signupRequest.getUsername());
+        Optional<UserEntity> existUserEmail = userRepository.findByEmail(signupRequest.getEmail());
+        if (existUser.isEmpty() && existUserEmail.isEmpty()){
             UserEntity user = new UserEntity();
             user.setUsername(signupRequest.getUsername());
-            user.setPassword(signupRequest.getPassword());
+            user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
             user.setEmail(signupRequest.getEmail());
             user.setRoles(Set.of(roleUser));
             userRepository.save(user);
             return user;
         }
-        return existUser;
+        return existUser.orElseGet(existUserEmail::get);
     }
     public Set<UserDTO> getAllUser(){
         return userRepository.findAll().stream().map(userEntity -> UserDTO.builder().id(userEntity.getId()).name(userEntity.getUsername()).noteShowSet(userEntity.getNoteEntities().stream().map(noteEntity -> NoteShow.builder().id(noteEntity.getId()).note_des(noteEntity.getNote_description()).remind(noteEntity.getRemind_time()).build()).collect(Collectors.toSet())).build()).collect(Collectors.toSet());

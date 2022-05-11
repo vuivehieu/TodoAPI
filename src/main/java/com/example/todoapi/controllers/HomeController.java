@@ -37,8 +37,6 @@ public class HomeController {
     @Autowired
     RefreshTokenService refreshTokenService;
     @Autowired
-    PasswordEncoder passwordEncoder;
-    @Autowired
     UserService userService;
     @Autowired
     UserRepository userRepository;
@@ -75,19 +73,19 @@ public class HomeController {
                 .orElseThrow(null);
     }
 
-    @GetMapping("/add")
-    public String addUser(){
-        RoleEntity roleUser = roleRepository.findByName("ROLE_USER");
-        UserEntity user = new UserEntity();
-        user.setUsername("user");
-        user.setPassword(passwordEncoder.encode("123"));
-        user.setRoles(Set.of(roleUser));
-        userRepository.save(user);
-        return "";
-    }
+//    @GetMapping("/add")
+//    public String addUser(){
+//        RoleEntity roleUser = roleRepository.findByName("ROLE_USER");
+//        UserEntity user = new UserEntity();
+//        user.setUsername("user");
+//        user.setPassword(passwordEncoder.encode("123"));
+//        user.setRoles(Set.of(roleUser));
+//        userRepository.save(user);
+//        return "";
+//    }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> addUser(@RequestBody SignupRequest signupRequest){
+    public ResponseEntity<?> signupUser(@RequestBody SignupRequest signupRequest){
         return ResponseEntity.ok(userService.addNewUser(signupRequest));
     }
 }
